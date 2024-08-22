@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector} from 'react-redux';
-
+import PlantItem from '../PlantItem/PlantItem.jsx';
 
 function PlantList() {
     const dispatch = useDispatch();
@@ -8,13 +8,17 @@ function PlantList() {
     const reduxState = useSelector(store => store);
 
     useEffect(() => {
-        // dispatch an action to request the plantList from the API
+        getPlants();
     }, []); 
+
+const getPlants = () => {
+    dispatch({type: 'FETCH_PLANTS'})
+}
 
     return (
         <div>
             <h3>This is the plant list</h3>
-            <pre>{JSON.stringify(reduxState)}</pre>
+            <PlantItem />
         </div>
     );
 }

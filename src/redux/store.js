@@ -1,28 +1,53 @@
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import logger from "redux-logger";
+import createSagaMiddleware from "redux-saga";
+import { takeLatest, put } from "redux-saga/effects";
+import axios from "axios";
 
-// this startingPlantArray should eventually be removed
-const startingPlantArray = [
-  { id: 1, name: 'Rose' },
-  { id: 2, name: 'Tulip' },
-  { id: 3, name: 'Oak' }
-];
+function* rootSaga() {
+  yield takeLatest('FETCH_PLANTS', fetchPlants)
+  yield takeLatest('REMOVE_PLANT', removePlant)
+}
 
-const plantList = (state = startingPlantArray, action) => {
+function* fetchPlants() {
+  try {
+    const allPlants = yield axios.get('/api/plants')
+    console.log('allplants is:', allPlants)
+    yield put({ type: "SET_PLANTS", payload: allPlants.data });
+  } catch (err) {
+    console.log("error fetching plants:", err);
+  }
+}
+
+function* removePlant (action) {
+  try {
+    yield axios.delete(`/api/plants/${action.payload}`)
+    yield put({type: 'FETCH_PLANTS'})
+  } catch (error) {
+    console.log('error removing plant:', error)
+  }
+}
+
+const sagaMiddleware = createSagaMiddleware();
+
+const plantList = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_PLANT':
-      return [ ...state, action.payload ]
+    case "SET_PLANTS":
+      let allThePlants = action.payload;
+      console.log(allThePlants);
+      return allThePlants;
     default:
       return state;
   }
 };
 
-// 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-// Note that the store is currently not
-// configured to utilize redux-saga OR
-// redux logger!
 const store = createStore(
-  combineReducers({ plantList }),
+  combineReducers({
+    plantList,
+  }),
+  applyMiddleware(sagaMiddleware, logger)
 );
-// 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+sagaMiddleware.run(rootSaga);
 
 export default store;
