@@ -20,3 +20,44 @@
 pre {
     white-space: pre-wrap;
 }
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}
+
+input {
+  margin: 5px;
+}
+
+form button {
+  margin-top: 10px;
+}
+
+#plant-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+table {
+  text-align: center;
+  border-collapse: collapse;
+}
+.cells {
+  border: 1px solid darkslategrey;
+  padding: 10px; 
+}
+
+.cells-head {
+  border: 1px solid black;
+  background-color: darkolivegreen;
+  color: white;
+  padding: 10px;
+}
+
+.left {
+  text-align: left;
+}

@@ -16,7 +16,7 @@ const getPlants = () => {
 }
 
     return (
-        <div>
+        <div id="plant-list">
             <h3>This is the plant list</h3>
             <PlantItem />
         </div>
